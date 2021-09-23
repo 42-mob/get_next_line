@@ -6,15 +6,15 @@
 
 #include "get_next_line.h"
 
-char	*join_line(int fd, char *line, char	*buffer, char **backup)
+char	*join_line(char *line, char	*buffer, char **backup)
 {
 	char	*temp;
 	int		i;
 	
 	if (!ft_strchr(buffer, '\n'))
 	{
-		if (backup[fd])
-			line = ft_strjoin(line, backup[fd]);
+		if (*backup)
+			line = ft_strjoin(line, *backup);
 		line = ft_strjoin(line, buffer);
 	}
 	else
@@ -23,13 +23,13 @@ char	*join_line(int fd, char *line, char	*buffer, char **backup)
 		while (buffer[i] != '\n')
 			i++;
 		temp = ft_substr(buffer, 0, i + 1);
-		if (backup[fd])
+		if (*backup)
 		{
-			line = ft_strjoin(line, backup[fd]);
+			line = ft_strjoin(line, *backup);
 			//free(backup);
 		}
 		line = ft_strjoin(line, temp);
-		backup[fd] = ft_strdup(&buffer[i + 1]);
+		*backup = ft_strdup(&buffer[i + 1]);
 		//free(temp);
 		//free(buffer);
 	}
@@ -49,20 +49,20 @@ char	*read_line(int fd, char **backup, char *buffer)
 	line = ft_strdup("");
 	while (bytes_read > 0 && !n_check)
 	{
-		line = join_line(fd, line, buffer, &backup[fd]);
+		line = join_line(line, buffer, backup);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		n_check = ft_strchr(buffer, '\n');
 	}
 	if (n_check)
 	{
-		line = join_line(fd, line, buffer, &backup[fd]);
+		line = join_line(line, buffer, backup);
 	}
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*backup[OPEN_MAX + 1];
+	static char	*backup[OPEN_MAX];
 	char		*buffer;
 	char		*line;
 	int			count;
