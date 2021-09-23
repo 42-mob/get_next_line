@@ -8,14 +8,13 @@
 
 char	*join_line(int fd, char *line, char	*buffer, char **backup)
 {
-	char	*line;
 	char	*temp;
 	int		i;
 	
 	if (!ft_strchr(buffer, '\n'))
 	{
-		if (&backup[fd])
-			line = ft_strjoin(line, &backup[fd]);
+		if (backup[fd])
+			line = ft_strjoin(line, backup[fd]);
 		line = ft_strjoin(line, buffer);
 	}
 	else
@@ -24,15 +23,15 @@ char	*join_line(int fd, char *line, char	*buffer, char **backup)
 		while (buffer[i] != '\n')
 			i++;
 		temp = ft_substr(buffer, 0, i + 1);
-		if (&backup[fd])
+		if (backup[fd])
 		{
-			line = ft_strjoin(line, &backup[fd]);
-			free(backup);
+			line = ft_strjoin(line, backup[fd]);
+			//free(backup);
 		}
 		line = ft_strjoin(line, temp);
 		backup[fd] = ft_strdup(&buffer[i + 1]);
-		free(temp);
-		free(buffer);
+		//free(temp);
+		//free(buffer);
 	}
 	return (line);
 }
@@ -63,23 +62,25 @@ char	*read_line(int fd, char **backup, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*backup[OPEN_MAX];
+	static char	*backup[OPEN_MAX + 1];
 	char		*buffer;
 	char		*line;
 	int			count;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (ft_strchr(&backup[fd], '\n'))
+	if (!backup[fd])
+		backup[fd] = ft_strdup("");
+	if (ft_strchr(backup[fd], '\n'))
 	{
 		count = 0;
 		while (backup[fd][count] != '\n')
 			count++;
-		line = ft_substr(&backup[fd], 0, count);
-		free (backup);
+		line = ft_substr(backup[fd], 0, count);
+		//free (backup);
 		return (line);
 	}
-	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));
+	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));//fazer check
 	line = read_line(fd, &backup[fd], buffer);
 	return (line);
 }
@@ -89,7 +90,7 @@ int	main(void)
 	int 	fd;
 	char	*check;
 	
-	fd = open("teste", O_RDONLY);
+	fd = open("multiple_line_no_nl", O_RDONLY);
 	check = get_next_line(fd);
 	printf(">:|%s|\n", check);
 	return (0);
