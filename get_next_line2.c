@@ -4,15 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+#include "get_next_line.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
@@ -28,19 +20,6 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 		n--;
 	}
 	return (dst);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*cpy;
-	int		size;
-
-	size = ft_strlen(s);
-	cpy = (char *)malloc(((size + 1) * sizeof(char)));
-	if (!cpy)
-		return (NULL);
-	cpy = ft_memcpy(cpy, s, size + 1);
-	return (cpy);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -81,19 +60,36 @@ char	*get_next_line(int fd)
 {
 	char	*buffer;
 	char	*line;
+	char	*temp;
 	int		bytes_read;
+	int		i;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	line = ft_strdup("");
+	if (bytes_read < 0 || line == NULL || buffer == NULL)
+		return (NULL);
+	i = 0;
 	while (bytes_read != 0 && *buffer != '\n')
 	{
-		printf("|%s|\n", buffer);
+		//printf("|%s|\n", buffer);
 		if (!ft_strchr(buffer, '\n'))
 		{
 			line = ft_strjoin(line, buffer);
-			printf("Teste l |%s|\n", line);
-			printf("Teste b |%s|\n", buffer);
+			//printf("Teste l |%s|\n", line);
+			//rintf("Teste b |%s|\n", buffer);
+		}
+		else
+		{
+			while (buffer[i] != '\n')
+				i++;
+			temp = ft_substr(buffer, 0, i);
+			line = ft_strjoin(line, temp);
+			free(temp);
+			free(buffer);
+			break;
 		}
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
