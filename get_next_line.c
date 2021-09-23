@@ -91,7 +91,10 @@ int	main(void)
 	char	*check;
 	
 	fd = open("multiple_line_no_nl", O_RDONLY);
-	check = get_next_line(fd);
-	printf(">:|%s|\n", check);
+	for (int i = 0; i < 3; i++)
+	{
+		check = get_next_line(fd);
+		printf(">:|%s", check);
+	}
 	return (0);
 }
