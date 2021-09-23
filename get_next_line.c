@@ -6,7 +6,7 @@
 
 #include "get_next_line.h"
 
-char	*join_line(int fd, char *line, char	*buffer, char *backup)
+char	*join_line(int fd, char *line, char	*buffer, char **backup)
 {
 	char	*line;
 	char	*temp;
@@ -14,10 +14,8 @@ char	*join_line(int fd, char *line, char	*buffer, char *backup)
 	
 	if (!ft_strchr(buffer, '\n'))
 	{
-		if (backup)
-		{
-			line = ft_strjoin(line, backup);
-		}
+		if (&backup[fd])
+			line = ft_strjoin(line, &backup[fd]);
 		line = ft_strjoin(line, buffer);
 	}
 	else
@@ -26,20 +24,20 @@ char	*join_line(int fd, char *line, char	*buffer, char *backup)
 		while (buffer[i] != '\n')
 			i++;
 		temp = ft_substr(buffer, 0, i + 1);
-		if (backup)
+		if (&backup[fd])
 		{
-			line = ft_strjoin(line, backup);
+			line = ft_strjoin(line, &backup[fd]);
 			free(backup);
 		}
 		line = ft_strjoin(line, temp);
-		backup = ft_strdup(&buffer[i + 1]);
+		backup[fd] = ft_strdup(&buffer[i + 1]);
 		free(temp);
 		free(buffer);
 	}
 	return (line);
 }
 
-char	*read_line(int fd, char *backup, char *buffer)
+char	*read_line(int fd, char **backup, char *buffer)
 {
 	char	*line;
 	int		bytes_read;
@@ -52,13 +50,13 @@ char	*read_line(int fd, char *backup, char *buffer)
 	line = ft_strdup("");
 	while (bytes_read > 0 && !n_check)
 	{
-		line = join_line(fd, line, buffer, backup);
+		line = join_line(fd, line, buffer, &backup[fd]);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		n_check = ft_strchr(buffer, '\n');
 	}
 	if (n_check)
 	{
-		line = join_line(fd, line, buffer, backup);
+		line = join_line(fd, line, buffer, &backup[fd]);
 	}
 	return (line);
 }
@@ -68,21 +66,21 @@ char	*get_next_line(int fd)
 	static char	*backup[OPEN_MAX];
 	char		*buffer;
 	char		*line;
-	int			j;
+	int			count;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (ft_strchr(backup, '\n'))
+	if (ft_strchr(&backup[fd], '\n'))
 	{
-		j = 0;
-		while (backup[j] != '\n')
-			j++;
-		line = ft_substr(backup, 0, j);
+		count = 0;
+		while (backup[fd][count] != '\n')
+			count++;
+		line = ft_substr(&backup[fd], 0, count);
 		free (backup);
 		return (line);
 	}
 	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));
-	line = read_line(fd, backup, buffer);
+	line = read_line(fd, &backup[fd], buffer);
 	return (line);
 }
 
