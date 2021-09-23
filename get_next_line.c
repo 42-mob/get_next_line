@@ -1,82 +1,98 @@
-//#include "get_next_line.h"
-//#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+
 #include "get_next_line.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-
-// buffer_size < \n || EOF !!!
-// buffer = char lidos até BUFFER_SIZE ou até EOF
-// Verificar se dentro do buffer tem \n
-//		não = usa auxiliar
-//			1. line zerada -> (setada no "")
-//			2. guardar o que tem dentro de buffer dentro da line
-// Verificar se dentro de buffer tem \n ou EOF
-//		não = line com conteudo
-//			1. line(atual) copia pra a auxiliar(temp) o conteudo
-//			2. line(atual) = line auxiliar(temp) concatena com o que acabou de ler
-//			3. libera o auxiliar(temp)
-//		sim = guarda o que tem até \n dentro da line junto o que já tinha
-
-// line = retornar
-// auxiliar = se necessário pra fazer a concatenação 
-//			-> segura o valor anterior da line + novo valor
-char	*get_next_line(int fd)
+char	*join_line(int fd, char *line, char	*buffer, char *backup)
 {
-	char	*buff;
-	char	*backup;
-	char	*copy;
-	int		count_buff;
-	int		count_backup;
-
-	count_buff = 0;
-	count_backup = 0;
-	buff = malloc(BUFFER_SIZE * sizeof(char));
-	printf("buff antes do read: %s\n", buff);
-	printf("ponteiro buff antes do read: %p\n", buff);
-	backup = malloc(BUFFER_SIZE * sizeof(char));
-	read (fd, buff, BUFFER_SIZE);
-	printf("buff depois do read: %s\n", buff);
-	printf("ponteiro buff antes do read: %p\n", buff);
-	while (buff[count_buff] != '\n')
-		count_buff++;
-	copy = ft_substr(buff, 0, count_buff + 1);
-	count_buff++;
-	while (count_buff < BUFFER_SIZE)
+	char	*line;
+	char	*temp;
+	int		i;
+	
+	if (!ft_strchr(buffer, '\n'))
 	{
-		backup[count_backup] = buff[count_buff];
-		count_buff++;
-		count_backup++;
+		if (backup)
+		{
+			line = ft_strjoin(line, backup);
+		}
+		line = ft_strjoin(line, buffer);
 	}
-	return (copy);
+	else
+	{
+		i = 0;
+		while (buffer[i] != '\n')
+			i++;
+		temp = ft_substr(buffer, 0, i + 1);
+		if (backup)
+		{
+			line = ft_strjoin(line, backup);
+			free(backup);
+		}
+		line = ft_strjoin(line, temp);
+		backup = ft_strdup(&buffer[i + 1]);
+		free(temp);
+		free(buffer);
+	}
+	return (line);
 }
 
-int main(void)
+char	*read_line(int fd, char *backup, char *buffer)
 {
-	char	*str;
-	int		fd;
+	char	*line;
+	int		bytes_read;
+	char	*n_check;
 
-	fd = open("41_with_nl", O_RDONLY);
-	str = get_next_line(fd);
-	//printf("string str: %s", str);
-	/* str = get_next_line(fd);
-	str = get_next_line(fd);
-	str = get_next_line(fd); */
-	/* while(1)
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read <= 0)
+		return (NULL);
+	n_check = ft_strchr(buffer, '\n');
+	line = ft_strdup("");
+	while (bytes_read > 0 && !n_check)
 	{
-		str = get_next_line(fd);
-		if (!str)
-		{
-			printf("str vazia\n");
-			break ;
-		}
-		printf("> %s\n", str);
-		free(str);
-	} */
+		line = join_line(fd, line, buffer, backup);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		n_check = ft_strchr(buffer, '\n');
+	}
+	if (n_check)
+	{
+		line = join_line(fd, line, buffer, backup);
+	}
+	return (line);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*backup[OPEN_MAX];
+	char		*buffer;
+	char		*line;
+	int			j;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (ft_strchr(backup, '\n'))
+	{
+		j = 0;
+		while (backup[j] != '\n')
+			j++;
+		line = ft_substr(backup, 0, j);
+		free (backup);
+		return (line);
+	}
+	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));
+	line = read_line(fd, backup, buffer);
+	return (line);
+}
+
+int	main(void)
+{
+	int 	fd;
+	char	*check;
+	
+	fd = open("teste", O_RDONLY);
+	check = get_next_line(fd);
+	printf(">:|%s|\n", check);
 	return (0);
 }

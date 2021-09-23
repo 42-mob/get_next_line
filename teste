@@ -1,7 +1,8 @@
 **Arquivo
-adrianoVin|icius
+adrianoVinicius
 Paulo
-Gabriela
+Gabrie
+EOF
 
 **Run do código
 SETA: BUFFER_SIZE = 5
@@ -31,3 +32,30 @@ buffer = "\nPaul"
 temp = "\n"
 line = "adrianoVinicius\n"
 backup = "Paul"
+
+
+2 - LOOP main
+fd = 3
+backup = "Paul"
+buffer = { , , , }
+bytes_read = 5
+buffer = "o\nGab"
+n_check = TRUE
+line = ""
+i = 1
+temp = "o\n"
+line = "Paul"
+line = "Paulo\n"
+backup = "Gab"
+
+3 - LOOP main
+fd = 3
+backup = "Gab"
+buffer = { , , , }
+bytes_read = 3
+buffer = "rie"
+n_check = FALSE
+line = ""
+line = "Gab"
+line = "Gabrie"
+bytes_read = 0
