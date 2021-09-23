@@ -1,2 +1,33 @@
-YBCDEF
-XBC
+**Arquivo
+adria|noVin|icius
+Paulo
+Gabriela
+
+**Run do código
+SETA: BUFFER_SIZE = 5
+SETA: OPEN_MAX = 256
+ENTRA: LOOP
+
+**MAIN
+1 - LOOP main
+fd = 3
+backup = 0
+buffer = { , , , }
+bytes_read = 5
+buffer = "adria"
+
+**READ_LINE
+- loop 1
+buffer = "adria"
+line = "adria"
+- loop 2
+buffer = "noVin"
+line = "adrianoVin"
+- loop 3
+buffer = "icius"
+line = "adrianoVinicius"
+- loop 4
+buffer = "\nPaul"
+temp = "\n"
+line = "adrianoVinicius\n"
+backup = "Paul"

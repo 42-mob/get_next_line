@@ -97,3 +97,53 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	}
 	return (src_len);
 }
+
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	size_t	i;
+
+	if (!src && !dst)
+		return (0);
+	i = 0;
+	while (n)
+	{
+		((unsigned char *)dst)[i] = ((unsigned char *)src)[i];
+		i++;
+		n--;
+	}
+	return (dst);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		l1;
+	int		l2;
+	char	*new;
+
+	if (s1 && s2)
+	{
+		l1 = ft_strlen(s1);
+		l2 = ft_strlen(s2);
+		new = (char *)malloc((l1 + l2 + 1) * sizeof(char));
+		if (!new)
+			return (NULL);
+		ft_memcpy(new, s1, l1);
+		ft_memcpy(&new[l1], s2, l2);
+		new[l1 + l2] = '\0';
+		return (new);
+	}
+	return (NULL);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s)
+	{
+		if ((unsigned char)*s == (unsigned char)c)
+			return ((char *) s);
+		s++;
+	}
+	if (c == '\0')
+		return ((char *) s);
+	return (NULL);
+}
