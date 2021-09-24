@@ -13,7 +13,7 @@ char	*join_line(char *line, char	*buffer, char **backup)
 
 	if (!ft_strchr(buffer, '\n'))
 	{
-		if (*backup)
+		if (*backup)//**backup
 			line = ft_strjoin(line, *backup);
 		line = ft_strjoin(line, buffer);
 	}
@@ -24,13 +24,13 @@ char	*join_line(char *line, char	*buffer, char **backup)
 			i++;
 		temp = ft_substr(buffer, 0, i + 1);
 		free (*backup);
-		if (*backup)
+		if (*backup)//**backup - verificar a necessidade deste if
 		{
 			line = ft_strjoin(line, *backup);
 			//free(backup);
 		}
 		line = ft_strjoin(line, temp);
-		*backup = ft_strdup(&buffer[i + 1]);
+		*backup = ft_strdup(&buffer[i + 1]); //fazer um check if buffer[buff_size - 1] = \n
 		//free(temp);
 		//free(buffer);
 	}

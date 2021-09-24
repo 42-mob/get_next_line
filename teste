@@ -59,3 +59,95 @@ line = ""
 line = "Gab"
 line = "Gabrie"
 bytes_read = 0
+
+
+FD
+teste = "AB|AC|AXI
+BANANA
+COCO"
+
+BUFFER_SIZE = 2
+buffer = { , , , }
+*ptr = 'A'
+buffer = {A, , , }
+*ptr = 'B'
+buffer = {A, B, }
+*ptr = 'A'
+
+1 - Leitura da read
+int		read(int fd, char *buffer, int BUFFER_SIZE)
+{
+	static char *ptr;
+	int			i;
+
+	ptr = &teste;
+
+	while (BUFFER_SIZE > 0)
+	{
+		buffer[i] = *ptr;
+		i++;
+		ptr++;
+		BUFFER_SIZE--;
+	}
+	return (i);
+}
+
+2 - Leitura da read
+
+FD
+teste = "AB|AC|AXI
+BANANA
+COCO"
+
+BUFFER_SIZE = 2
+buffer = {A, B, }
+*ptr = 'A'
+buffer = {A, B, }
+*ptr = 'C'
+buffer = {A, C, }
+*ptr = 'A'
+
+int		read(int fd, char *buffer, int BUFFER_SIZE)
+{
+	static char *ptr;
+	int			i;
+
+	ptr = &teste;
+
+	while (BUFFER_SIZE > 0)
+	{
+		buffer[i] = *ptr;
+		i++;
+		ptr++;
+		BUFFER_SIZE--;
+	}
+	return (i);
+}
+
+como funcionam strings, arrays, ponteiros de char
+call by reference
+call by value
+
+&algumacoisa = 'valor'
+*ptr1 = &algumacoisa;
+**ptr2 = &ptr; 
+
+**ptr2 = &ptr1, 
+		 &ptr2, 
+		 &ptr3
+
+ptr = &algumacoisa;
+
+				fd = 0 -> entrada padrão (stdin) "standard input" teclado
+				fd = 1 -> saída padrão (stdout) "standard output" terminal
+				fd = 2 -> saída de erro (stderr) "standard error" terminal -> erro
+				fd = 3 -> lista de frutas
+**backup[256] = &fd 0
+				&fd 1
+				&fd 2
+				&fd 3 -> lista de frutas
+				&
+				&
+
+&fd 3 (lista de frutas) = &ptr1
+ptr1 = &endereço de A
