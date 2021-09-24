@@ -98,5 +98,3 @@ char	*get_next_line(int fd)
 // 	}
 // 	return (0);
 // }
-
-Mussum Ipsum, cacilds vidis litro abertis. Mauris nec dolor in eros commodo tempor.
