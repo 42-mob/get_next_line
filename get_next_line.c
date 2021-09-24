@@ -10,7 +10,7 @@ char	*join_line(char *line, char	*buffer, char **backup)
 {
 	char	*temp;
 	int		i;
-	
+
 	if (!ft_strchr(buffer, '\n'))
 	{
 		if (*backup)
@@ -23,6 +23,7 @@ char	*join_line(char *line, char	*buffer, char **backup)
 		while (buffer[i] != '\n')
 			i++;
 		temp = ft_substr(buffer, 0, i + 1);
+		free (*backup);
 		if (*backup)
 		{
 			line = ft_strjoin(line, *backup);
@@ -77,7 +78,7 @@ char	*get_next_line(int fd)
 		while (backup[fd][count] != '\n')
 			count++;
 		line = ft_substr(backup[fd], 0, count);
-		//free (backup);
+		free (*backup);
 		return (line);
 	}
 	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));//fazer check
@@ -85,16 +86,16 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main(void)
-{
-	int 	fd;
-	char	*check;
-	
-	fd = open("multiple_line_no_nl", O_RDONLY);
-	for (int i = 0; i < 3; i++)
-	{
-		check = get_next_line(fd);
-		printf(">:|%s", check);
-	}
-	return (0);
-}
+// int	main(void)
+// {
+// 	int 	fd;
+// 	char	*check;
+
+// 	fd = open("multiple_line_no_nl", O_RDONLY);
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		check = get_next_line(fd);
+// 		printf(">:|%s", check);
+// 	}
+// 	return (0);
+// }

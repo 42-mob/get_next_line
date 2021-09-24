@@ -9,12 +9,6 @@
 #  define BUFFER_SIZE 1
 # endif
 
-typedef enum e_bool
-{
-	FALSE = 0,
-	TRUE = !FALSE,
-}			t_bool;
-
 /**
  * @brief Copy the STR to a new pointer.
  *
