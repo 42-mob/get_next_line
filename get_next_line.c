@@ -90,7 +90,6 @@ char	*get_next_line(int fd)
 // {
 // 	int 	fd;
 // 	char	*check;
-
 // 	fd = open("multiple_line_no_nl", O_RDONLY);
 // 	for (int i = 0; i < 3; i++)
 // 	{
@@ -99,3 +98,5 @@ char	*get_next_line(int fd)
 // 	}
 // 	return (0);
 // }
+
+Mussum Ipsum, cacilds vidis litro abertis. Mauris nec dolor in eros commodo tempor.
