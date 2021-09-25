@@ -177,6 +177,7 @@ char	*get_next_line(int fd)
 // 	}
 // 	buffer = (char *)malloc(BUFFER_SIZE + 1 * sizeof(char));//fazer check
 // 	line = read_line(fd, &backup[fd], buffer);
+// OIIIIIIIIIIIIIIIII
 // 	return (line);
 // }
 }
